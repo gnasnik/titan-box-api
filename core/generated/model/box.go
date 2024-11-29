@@ -86,10 +86,3 @@ type BoxQuality struct {
 	DiskUsage     float64   `json:"diskUsage" db:"diskUsage"`
 	UpdatedAt     time.Time `json:"-" db:"updatedAt"`
 }
-
-type PaiUserKey struct {
-	APIKey    string `db:"apiKey"`
-	APISecret string `db:"apiSecret"`
-	Username  string `db:"username"`
-	Status    int64  `db:"status"`
-}

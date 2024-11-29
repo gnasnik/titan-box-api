@@ -19,6 +19,10 @@ func QueryBoxListGet(c *gin.Context) {
 	ctx := c.Request.Context()
 	claims := jwt.ExtractClaims(c)
 	username := claims[identityKey].(string)
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
 
 	boxIds := c.QueryArray("boxIds")
 	if boxIds == nil {
@@ -89,6 +93,10 @@ func QueryBoxListPost(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
 
 	total, boxes, err := dao.GetBoxesList(ctx, username, requestParam.BoxIds, requestParam.SupplierBoxIds, page, pageSize)
 	if err != nil {
@@ -137,6 +145,19 @@ func QueryBoxIncomeV2Get(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
+	if page == 0 {
+		page = 1
+	}
+
+	if pageSize == 0 {
+		pageSize = 10
+	}
+
 	totalNum, total, boxIncome, err := dao.GetBoxIncomeV2(ctx, username, boxIds, remarks, supplierBoxIds, start, end, page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errors.New("InternalServerError"))
@@ -175,6 +196,11 @@ func QueryBoxIncomeV2Post(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
 	page, _ := strconv.ParseInt(requestParam.Page, 10, 64)
 	pageSize, _ := strconv.ParseInt(requestParam.PageSize, 10, 64)
 
@@ -227,7 +253,7 @@ func QueryBoxBandwidthGet(c *gin.Context) {
 		supplierBoxIds = c.QueryArray("supplierBoxIds[]")
 	}
 
-	if date == "" || boxIds == nil {
+	if date == "" {
 		c.JSON(http.StatusBadRequest, errors.New("BadRequest"))
 		return
 	}
@@ -246,6 +272,11 @@ func QueryBoxBandwidthGet(c *gin.Context) {
 	end, _ := time.Parse(time.DateTime, endStr)
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
 	bandwidths, err := dao.GetBoxBandwidth(ctx, username, boxIds, supplierBoxIds, start.Unix(), end.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errors.New("InternalServerError"))
@@ -319,6 +350,11 @@ func QueryBoxBandwidthPost(c *gin.Context) {
 	end, _ := time.Parse(time.DateTime, endStr)
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
 	bandwidths, err := dao.GetBoxBandwidth(ctx, username, requestParam.BoxId, requestParam.SupplierBoxIds, start.Unix(), end.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errors.New("InternalServerError"))
@@ -366,7 +402,7 @@ func QueryBoxQualityGet(c *gin.Context) {
 		supplierBoxIds = c.QueryArray("supplierBoxIds[]")
 	}
 
-	if date == "" || boxIds == nil {
+	if date == "" {
 		c.JSON(http.StatusBadRequest, errors.New("BadRequest"))
 		return
 	}
@@ -385,6 +421,11 @@ func QueryBoxQualityGet(c *gin.Context) {
 	end, _ := time.Parse(time.DateTime, endStr)
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
 	qualities, err := dao.GetBoxQualities(ctx, username, boxIds, supplierBoxIds, start.Unix(), end.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errors.New("InternalServerError"))
@@ -453,6 +494,11 @@ func QueryBoxQualityPost(c *gin.Context) {
 	end, _ := time.Parse(time.DateTime, endStr)
 
 	ctx := c.Request.Context()
+	pi, err := dao.GetPaiNetInfoByUsername(ctx, username)
+	if err == nil {
+		username = pi.PaiUsername
+	}
+
 	qualities, err := dao.GetBoxQualities(ctx, username, requestParam.BoxId, requestParam.SupplierBoxIds, start.Unix(), end.Unix())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errors.New("InternalServerError"))

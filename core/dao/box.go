@@ -171,7 +171,7 @@ func GetBoxIncomeV2(ctx context.Context, username string, boxIds, remarks, suppl
 	}
 
 	if len(remarks) > 0 {
-		remarkQuery, remarkArgs, err := sqlx.In(` and remarks in (?)`, remarks)
+		remarkQuery, remarkArgs, err := sqlx.In(` and remark in (?)`, remarks)
 		if err != nil {
 			return 0, 0, nil, err
 		}
@@ -179,7 +179,7 @@ func GetBoxIncomeV2(ctx context.Context, username string, boxIds, remarks, suppl
 		args = append(args, remarkArgs...)
 	}
 
-	countQry := `SELECT sum(amount) as total, count(1) as totalNum from box_income ` + where
+	countQry := `SELECT ifnull(sum(amount),0) as total, ifnull(count(1),0) as totalNum from box_income ` + where
 	type Count struct {
 		Total    int64 `db:"total"`
 		TotalNum int64 `db:"totalNum"`
@@ -229,7 +229,6 @@ func GetBoxBandwidth(ctx context.Context, username string, boxIds, supplierBoxId
 	}
 
 	query = query + where
-	fmt.Println("query=>", query)
 
 	var out []*model.BoxBandwidth
 	if err := DB.SelectContext(ctx, &out, query, args...); err != nil {
@@ -276,10 +275,10 @@ func GetBoxQualities(ctx context.Context, username string, boxIds, supplierBoxId
 	return out, nil
 }
 
-func GetUserKeys(ctx context.Context) ([]*model.PaiUserKey, error) {
+func GetUserKeys(ctx context.Context) ([]*model.PaiNetInfo, error) {
 	query := `select * from pai_userkey`
 
-	var out []*model.PaiUserKey
+	var out []*model.PaiNetInfo
 	if err := DB.SelectContext(ctx, &out, query); err != nil {
 		return nil, err
 	}
@@ -287,11 +286,22 @@ func GetUserKeys(ctx context.Context) ([]*model.PaiUserKey, error) {
 	return out, nil
 }
 
-func GetUserKeyByAPIKey(ctx context.Context, key string) (*model.PaiUserKey, error) {
+func GetUserKeyByAPIKey(ctx context.Context, key string) (*model.PaiNetInfo, error) {
 	query := `select * from pai_userkey where apiKey = ?`
 
-	var out model.PaiUserKey
+	var out model.PaiNetInfo
 	if err := DB.GetContext(ctx, &out, query, key); err != nil {
+		return nil, err
+	}
+
+	return &out, nil
+}
+
+func GetPaiNetInfoByUsername(ctx context.Context, username string) (*model.PaiNetInfo, error) {
+	query := `select * from pai_userkey where username = ?`
+
+	var out model.PaiNetInfo
+	if err := DB.GetContext(ctx, &out, query, username); err != nil {
 		return nil, err
 	}
 

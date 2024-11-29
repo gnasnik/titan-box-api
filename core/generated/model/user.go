@@ -17,3 +17,11 @@ type User struct {
 	InviterType  int       `json:"inviterType" db:"inviterType"`
 	CreatedAt    time.Time `json:"-" db:"createdAt"`
 }
+
+type PaiNetInfo struct {
+	APIKey      string `db:"apiKey"`
+	APISecret   string `db:"apiSecret"`
+	Username    string `db:"username"`
+	PaiUsername string `db:"paiUsername"`
+	Status      int64  `db:"status"`
+}

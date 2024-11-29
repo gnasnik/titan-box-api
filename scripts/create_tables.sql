@@ -32,7 +32,7 @@ CREATE TABLE `box` (
 `createdAt` datetime(3) NOT NULL DEFAULT 0,
 `updatedAt` datetime(3) NOT NULL DEFAULT 0,
 PRIMARY KEY (`boxId`)
-)
+);
 
 DROP TABLE IF EXISTS `box_diskinfo`;
 CREATE TABLE `box_diskinfo` (
@@ -44,7 +44,7 @@ CREATE TABLE `box_diskinfo` (
 `diskUsed` varchar(255) NOT NULL DEFAULT '',
 INDEX `idx_boxId` USING BTREE(`boxId`),
 UNIQUE KEY `uniq_boxid_diskid` (`boxId`, `diskId`) USING BTREE
-)
+);
 
 DROP TABLE IF EXISTS `box_income`;
 CREATE TABLE `box_income` (
@@ -63,7 +63,7 @@ updatedAt datetime(3) NOT NULL DEFAULT 0,
 INDEX `idx_boxId_date` USING BTREE(`boxId`, `date`),
 INDEX `idx_remark` USING BTREE(`remark`),
 UNIQUE KEY `uniq_boxid_date` (`boxId`, `date`) USING BTREE
-)
+);
 
 DROP TABLE IF EXISTS `box_bandwidth`;
 CREATE TABLE `box_bandwidth` (
@@ -76,7 +76,7 @@ download float(32) NOT NULL DEFAULT 0,
 updatedAt datetime(3) NOT NULL DEFAULT 0,
 INDEX `idx_boxId_time` USING BTREE(`boxId`, `time`),
 UNIQUE KEY `uniq_boxid_time` (`boxId`, `time`) USING BTREE
-)
+);
 
 DROP TABLE IF EXISTS `box_quality`;
 CREATE TABLE `box_quality` (
@@ -93,16 +93,17 @@ diskUsage float(32) NOT NULL DEFAULT 0,
 updatedAt datetime(3) NOT NULL DEFAULT 0,
 INDEX `idx_boxId_time` USING BTREE(`boxId`, `time`),
 UNIQUE KEY `uniq_boxid_time` (`boxId`, `time`) USING BTREE
-)
+);
 
 
 DROP TABLE IF EXISTS `pai_userkey`;
 CREATE TABLE `pai_userkey` (
+paiUsername varchar(255) NOT NULL DEFAULT '',
 username varchar(255) NOT NULL DEFAULT '',
 apiKey varchar(255) NOT NULL DEFAULT '',
 apiSecret varchar(255) NOT NULL DEFAULT '',
 status tinyint(4) not null default 0
-)
+);
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
@@ -120,5 +121,5 @@ canInvite tinyint(4) not null default 0,
 inviterType tinyint(4) not null default 0,
 createdAt datetime(3) NOT NULL DEFAULT 0,
 PRIMARY KEY (`uid`)
-)ENGINE=InnoDB AUTO_INCREMENT=100000
+)ENGINE=InnoDB AUTO_INCREMENT=100000;
 
